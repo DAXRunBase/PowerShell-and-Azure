@@ -1,10 +1,6 @@
 ﻿# Clean up previous AzCopy journal executions
 Remove-Item "$env:USERPROFILE\AppData\Local\Microsoft\Azure\AzCopy\*.jnl"
 
-# Reset Archive bits
-#.\Clear-ArchiveBit.ps1 -Filter "*.bak" -Path "U:\Backup" -Recurse
-#.\Clear-ArchiveBit.ps1 -Filter "*.trn" -Path "U:\Backup" -Recurse
-
 # /@ Use parameter file
 # /S Recursive processing
 # /Y No prompt
@@ -12,7 +8,7 @@ Remove-Item "$env:USERPROFILE\AppData\Local\Microsoft\Azure\AzCopy\*.jnl"
 # /XO exclude same or older blob
 # /BlobType:block
 
-# get reference date (8th oldest full backup file)
+# get reference date (8th oldest full backup file), change the number if you create more or less than an 8-file split of your BAK
 $dir = 'U:\Backup\AlwaysOnCluster\AXDatabaseName\FULL\'
 $latest = Get-ChildItem -Path $dir | Sort-Object CreationTime -Descending | Select-Object -Skip 7 -First 1
 $RefDate = $latest.CreationTime
@@ -30,5 +26,5 @@ $args = '/@:"U:\Backup\AzCopyBAK.txt" /V:"U:\Backup\AzCopy_' + "$(Get-Date -Form
 $p = Start-Process 'C:\Program Files (x86)\Microsoft SDKs\Azure\AzCopy\AzCopy.exe' -ArgumentList $args -wait
 
 # Remove files which were successfully copied
-$dir = 'U:\Backup\ENF-DAXCluster1$DAXSQLAG\AxaptaLive\' 
+$dir = 'U:\Backup\AlwaysOnCluster\AXDatabaseName\' 
 Get-ChildItem $Dir -Include '*.bak','*.trn' -Recurse | Where-Object { $_.CreationTime -lt $RefDate } | Remove-Item
