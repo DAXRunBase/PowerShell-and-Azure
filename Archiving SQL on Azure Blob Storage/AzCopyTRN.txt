@@ -1,0 +1,7 @@
+/Source:"U:\Backup\"
+/Pattern:"*.trn"
+/Dest:"https://yourazurestorageaccount.blob.core.windows.net/daxsql-backup/"
+/DestKey:"yourdestinationkey"
+/Y
+/S
+/XO
